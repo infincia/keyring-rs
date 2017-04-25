@@ -1,0 +1,29 @@
+[package]
+authors = ["Walther Chen <walther.chen@gmail.com>"]
+description = "Cross-platform library for managing passwords"
+homepage = "https://github.com/hwchen/keyring-rs.git"
+keywords = ["password", "cross-platform", "keychain", "keyring"]
+license = "MIT OR Apache-2.0"
+name = "keyring"
+repository = "https://github.com/hwchen/keyring-rs.git"
+version = "0.5.0"
+workspace = ".."
+
+[dependencies]
+rustc-serialize = "*"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+secret-service = "*"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+advapi32-sys = "*"
+winapi = "*"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+security-framework = { version = "*", git = "https://github.com/infincia/rust-security-framework.git", branch = "infincia" }
+#security-framework = "*"
+
+[lib]
+name = "keyring"
+crate-type = ["rlib"]
+doctest = false
