@@ -13,7 +13,7 @@ workspace = ".."
 rustc-serialize = "*"
 
 [target.'cfg(target_os = "linux")'.dependencies]
-secret-service = "*"
+secret-service = { version = "*", default-features = false }
 
 [target.'cfg(target_os = "windows")'.dependencies]
 advapi32-sys = "*"

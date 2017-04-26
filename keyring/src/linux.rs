@@ -25,7 +25,7 @@ impl<'a> Keyring<'a> {
     }
 
     pub fn set_password(&self, password: &str) -> ::Result<()> {
-        let ss = try!(SecretService::new(EncryptionType::Dh));
+        let ss = try!(SecretService::new(EncryptionType::Plain));
         let collection = try!(ss.get_default_collection());
         if collection.is_locked().unwrap() {
             try!(collection.unlock());
@@ -42,7 +42,7 @@ impl<'a> Keyring<'a> {
     }
 
     pub fn get_password(&self) -> ::Result<String> {
-        let ss = try!(SecretService::new(EncryptionType::Dh));
+        let ss = try!(SecretService::new(EncryptionType::Plain));
         let collection = try!(ss.get_default_collection());
         if collection.is_locked().unwrap() {
             try!(collection.unlock());
@@ -55,7 +55,7 @@ impl<'a> Keyring<'a> {
     }
 
     pub fn delete_password(&self) -> ::Result<()> {
-        let ss = try!(SecretService::new(EncryptionType::Dh));
+        let ss = try!(SecretService::new(EncryptionType::Plain));
         let collection = try!(ss.get_default_collection());
         if collection.is_locked().unwrap() {
             try!(collection.unlock());
