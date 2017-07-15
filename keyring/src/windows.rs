@@ -2,6 +2,7 @@ use ::KeyringError;
 use advapi32::{CredFree, CredDeleteW, CredReadW, CredWriteW};
 use std::ffi::OsStr;
 use std::iter::once;
+use std::convert::From;
 use std::mem;
 use std::os::raw::c_void;
 use std::os::windows::ffi::OsStrExt;
@@ -15,6 +16,7 @@ use winapi::wincred::{
     PCREDENTIAL_ATTRIBUTEW,
     PCREDENTIALW,
 };
+use win32_error::*;
 
 // DWORD is u32
 // LPCWSTR is *const u16
@@ -86,7 +88,10 @@ impl<'a> Keyring<'a> {
 
         // Call windows API
         match unsafe{ CredWriteW(pcredential, 0) } {
-            0 => Err(KeyringError::WindowsVaultError),
+            0 => {
+                let error = Win32Error::new();
+                Err(KeyringError::from(error))
+            },
             _ => Ok(())
         }
     }
@@ -109,7 +114,10 @@ impl<'a> Keyring<'a> {
 
         // Windows api call
         match unsafe { CredReadW(target_name.as_ptr(), cred_type, 0, &mut pcredential) } {
-            0 => Err(KeyringError::WindowsVaultError),
+            0 => {
+                let error = Win32Error::new();
+                Err(KeyringError::from(error))
+            },
             _ => {
                 // Dereferencing pointer to credential
                 let credential: CREDENTIALW = unsafe { *pcredential };
@@ -127,8 +135,8 @@ impl<'a> Keyring<'a> {
                     .map(|pass| {
                         pass.to_string()
                     })
-                    .map_err(|_| {
-                        KeyringError::WindowsVaultError
+                    .map_err(|err| {
+                        KeyringError::from(err)
                     });
 
                 // Free the credential
@@ -150,7 +158,10 @@ impl<'a> Keyring<'a> {
         let target_name = to_wstr(&target_name);
 
         match unsafe { CredDeleteW(target_name.as_ptr(), cred_type, 0) } {
-            0 => Err(KeyringError::WindowsVaultError),
+            0 => {
+                let error = Win32Error::new();
+                Err(KeyringError::from(error))
+            },
             _ => Ok(()),
         }
     }

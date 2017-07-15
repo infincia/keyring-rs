@@ -18,6 +18,8 @@ secret-service = { version = "*", default-features = false }
 [target.'cfg(target_os = "windows")'.dependencies]
 advapi32-sys = "*"
 winapi = "*"
+kernel32-sys = "*"
+win32-error = "0.9.0"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 security-framework = { version = "*", git = "https://github.com/infincia/rust-security-framework.git", branch = "infincia" }
